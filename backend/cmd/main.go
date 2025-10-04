@@ -20,11 +20,11 @@ func main() {
 
 	gisClient := httpclient.NewGisClient(log, cfg.HTTPClientConfig)
 
-	restServer := httpserver.NewHTTPServer(log, cfg.Env, cfg.HTTPServerConfig, &parkingUsecase, gisClient)
+	parkingInfoClient := httpclient.NewParkingInfoClient(log, cfg.HTTPClientConfig)
+
+	restServer := httpserver.NewHTTPServer(log, cfg.Env, cfg.HTTPServerConfig, &parkingUsecase, gisClient, parkingInfoClient)
 
 	restServer.Run()
-
-	// TODO: add graceful
 }
 
 func setupLogger(env string) *slog.Logger {
