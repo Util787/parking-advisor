@@ -32,7 +32,7 @@ func (hc *HttpClient) GetParkingsInPointRadius(radius int, point models.Point) (
 
 	hc.log.Debug("sending request to 2gis items api", slog.Any("radius", radius), slog.Any("point", point))
 
-	req := hc.client.R().SetQueryParams(map[string]string{"radius": strconv.Itoa(radius), "point": point.Lon + "," + point.Lat, "type": "parking", "fields": "items.capacity,items.point,items.is_paid"})
+	req := hc.client.R().SetQueryParams(map[string]string{"radius": strconv.Itoa(radius), "point": point.Lon + "," + point.Lat, "type": "parking", "fields": "items.capacity,items.point,items.is_paid", "sort": "distance"})
 	hc.log.Debug("request SetQueryParams", slog.Any("request", req))
 
 	restyResp, err := req.Get(hc.twoGisItemsURL)

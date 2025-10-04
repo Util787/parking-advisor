@@ -17,7 +17,7 @@ func (h *Handler) InitRoutes(env string) *gin.Engine {
 	}
 
 	v1 := router.Group("/api/v1")
-	v1.Use(NewBasicMiddleware(h.log))
+	v1.Use(newBasicMiddleware(h.log))
 
 	parkings := v1.Group("/parkings")
 	{
