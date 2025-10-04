@@ -29,9 +29,11 @@ type HTTPServerConfig struct {
 }
 
 type HTTPClientConfig struct {
-	Timeout        time.Duration `yaml:"timeout" env:"HTTP_CLIENT_TIMEOUT"`
-	TwoGisApiKey   string        `yaml:"two-gis-api-key" env:"TWO_GIS_API_KEY"`
-	TwoGisItemsURL string        `yaml:"two-gis-items-url" env:"TWO_GIS_ITEMS_URL"`
+	Retries             int           `yaml:"retries" env:"HTTP_CLIENT_RETRIES"`
+	Timeout             time.Duration `yaml:"timeout" env:"HTTP_CLIENT_TIMEOUT"`
+	TwoGisApiKey        string        `yaml:"two-gis-api-key" env:"TWO_GIS_API_KEY"`
+	TwoGisItemsURL      string        `yaml:"two-gis-items-url" env:"TWO_GIS_ITEMS_URL"`
+	TwoGisDistMatrixURL string        `yaml:"two-gis-dist-matrix-url" env:"TWO_GIS_DIST_MATRIX_URL"`
 }
 
 func MustLoadConfig() *Config {
