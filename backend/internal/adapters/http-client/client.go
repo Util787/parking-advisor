@@ -7,14 +7,14 @@ import (
 	"github.com/go-resty/resty/v2"
 )
 
-type HttpClient struct {
+type GisClient struct {
 	log                 *slog.Logger
 	client              *resty.Client
 	twoGisItemsURL      string
 	twoGisDistMatrixURL string
 }
 
-func NewHttpClient(log *slog.Logger, cfg config.HTTPClientConfig) *HttpClient {
+func NewGisClient(log *slog.Logger, cfg config.HTTPClientConfig) *GisClient {
 
 	client := resty.New()
 
@@ -23,7 +23,7 @@ func NewHttpClient(log *slog.Logger, cfg config.HTTPClientConfig) *HttpClient {
 
 	client = client.SetQueryParam("key", cfg.TwoGisApiKey)
 
-	return &HttpClient{
+	return &GisClient{
 		log:                 log,
 		client:              client,
 		twoGisItemsURL:      cfg.TwoGisItemsURL,

@@ -17,7 +17,7 @@ const (
 type Handler struct {
 	log            *slog.Logger
 	parkingUsecase parkingUsecase
-	gisClient      *httpclient.HttpClient
+	gisClient      *httpclient.GisClient
 }
 
 type parkingUsecase interface {

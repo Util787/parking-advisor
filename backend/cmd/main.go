@@ -18,7 +18,7 @@ func main() {
 
 	parkingUsecase := usecase.NewParkingUsecase(log)
 
-	gisClient := httpclient.NewHttpClient(log, cfg.HTTPClientConfig)
+	gisClient := httpclient.NewGisClient(log, cfg.HTTPClientConfig)
 
 	restServer := httpserver.NewHTTPServer(log, cfg.Env, cfg.HTTPServerConfig, &parkingUsecase, gisClient)
 

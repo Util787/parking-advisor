@@ -27,7 +27,7 @@ type TwoGisItemsResp struct {
 	} `json:"result"`
 }
 
-func (hc *HttpClient) GetParkingsInPointRadius(radius int, point models.Point) ([]models.Parking, error) {
+func (hc *GisClient) GetParkingsInPointRadius(radius int, point models.Point) ([]models.Parking, error) {
 	var resp TwoGisItemsResp
 
 	hc.log.Debug("sending request to 2gis items api", slog.Any("radius", radius), slog.Any("point", point))

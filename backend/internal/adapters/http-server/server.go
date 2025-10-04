@@ -14,7 +14,7 @@ type Server struct {
 	httpServer *http.Server
 }
 
-func NewHTTPServer(log *slog.Logger, env string, cfg config.HTTPServerConfig, parkingUsecase parkingUsecase, gisClient *httpclient.HttpClient) *Server {
+func NewHTTPServer(log *slog.Logger, env string, cfg config.HTTPServerConfig, parkingUsecase parkingUsecase, gisClient *httpclient.GisClient) *Server {
 	handler := Handler{
 		log:            log,
 		parkingUsecase: parkingUsecase,
