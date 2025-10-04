@@ -27,15 +27,15 @@ type TwoGisItemsResp struct {
 	} `json:"result"`
 }
 
-func (hc *HttpClient) GetParkingsInPointRadius(radius int, point models.Point) ([]models.Parking, error) {
+func (gc *GisClient) GetParkingsInPointRadius(radius int, point models.Point) ([]models.Parking, error) {
 	var resp TwoGisItemsResp
 
-	hc.log.Debug("sending request to 2gis items api", slog.Any("radius", radius), slog.Any("point", point))
+	gc.log.Debug("sending request to 2gis items api", slog.Any("radius", radius), slog.Any("point", point))
 
-	req := hc.client.R().SetQueryParams(map[string]string{"radius": strconv.Itoa(radius), "point": point.Lon + "," + point.Lat, "type": "parking", "fields": "items.capacity,items.point,items.is_paid", "sort": "distance"})
-	hc.log.Debug("request SetQueryParams", slog.Any("request", req))
+	req := gc.client.R().SetQueryParams(map[string]string{"radius": strconv.Itoa(radius), "point": point.Lon + "," + point.Lat, "type": "parking", "fields": "items.capacity,items.point,items.is_paid", "sort": "distance"})
+	gc.log.Debug("request SetQueryParams", slog.Any("request", req))
 
-	restyResp, err := req.Get(hc.twoGisItemsURL)
+	restyResp, err := req.Get(gc.twoGisItemsURL)
 
 	slog.Debug("got response from 2gis items api", slog.Any("response", resp), slog.Any("status_code", restyResp.StatusCode()))
 
@@ -71,7 +71,67 @@ func (hc *HttpClient) GetParkingsInPointRadius(radius int, point models.Point) (
 		})
 	}
 
-	slog.Debug("test", slog.Any("parkings", parkings))
+	return parkings, nil
+}
+
+type ParkingInfoReq struct {
+	StartPoint models.Point `json:"start_point"`
+	EndPoint   models.Point `json:"end_point"`
+	Items      []struct {
+		Id       string       `json:"id"`
+		Capacity int          `json:"capacity"`
+		Point    models.Point `json:"point"`
+	} `json:"items"`
+}
+
+type ParkingInfoResp struct {
+	Items []struct {
+		Id        string       `json:"id"`
+		Available int          `json:"available"`
+		Point     models.Point `json:"point"`
+	} `json:"items"`
+}
+
+func (pc *ParkingInfoClient) GetParkingInfo(parkings []models.Parking, sourcePoint models.Point, destPoint models.Point) ([]models.Parking, error) {
+	var reqBody ParkingInfoReq
+	reqBody.Items = make([]struct {
+		Id       string       `json:"id"`
+		Capacity int          `json:"capacity"`
+		Point    models.Point `json:"point"`
+	}, len(parkings))
+
+	reqBody.StartPoint = sourcePoint
+	reqBody.EndPoint = destPoint
+	for i, p := range parkings {
+		reqBody.Items[i].Id = p.Id
+		reqBody.Items[i].Capacity = p.Capacity
+		reqBody.Items[i].Point = p.Point
+	}
+
+	pc.log.Debug("sending request to parking info api", slog.Any("request", reqBody))
+
+	resp, err := pc.client.R().
+		SetHeader("Content-Type", "application/json").
+		SetBody(reqBody).
+		Post(pc.ParkingInfoURL)
+
+	if err != nil {
+		return nil, fmt.Errorf("%s :error getting parkings from 2gis: %w", common.GetOperationName(), err)
+	}
+
+	if resp.StatusCode() != 200 {
+		return nil, fmt.Errorf("%s :non-200 status code from 2gis: %d", common.GetOperationName(), resp.StatusCode())
+	}
+
+	var respBody ParkingInfoResp
+	err = json.Unmarshal(resp.Body(), &respBody)
+	if err != nil {
+		return nil, fmt.Errorf("%s :error unmarshalling parking info response: %w", common.GetOperationName(), err)
+	}
+
+	for i := range respBody.Items {
+		parkings[i].FreeParkingSlots = respBody.Items[i].Available
+	}
 
 	return parkings, nil
 }

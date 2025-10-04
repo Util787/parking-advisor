@@ -34,6 +34,7 @@ type HTTPClientConfig struct {
 	TwoGisApiKey        string        `yaml:"two-gis-api-key" env:"TWO_GIS_API_KEY"`
 	TwoGisItemsURL      string        `yaml:"two-gis-items-url" env:"TWO_GIS_ITEMS_URL"`
 	TwoGisDistMatrixURL string        `yaml:"two-gis-dist-matrix-url" env:"TWO_GIS_DIST_MATRIX_URL"`
+	ParkingInfoURL      string        `yaml:"parking-info-url" env:"PARKING_INFO_URL"`
 }
 
 func MustLoadConfig() *Config {

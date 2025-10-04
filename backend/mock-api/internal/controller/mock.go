@@ -11,22 +11,24 @@ import (
 
 func HandleMock(c *gin.Context) {
 	req := &model.JsonRequest{}
-	if err := c.Bind(req); err != nil {
+	if err := c.ShouldBindJSON(req); err != nil {
 		log.Printf("error binding request json: %v", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": "invalid json structure"})
 		return
 	}
+	log.Printf("mock req: %+v", req)
 
 	resp := &model.JsonResponse{}
 	for _, item := range req.Items {
 		resp.Items = append(resp.Items, model.JsonResponseItems{
-			Id: item.Id,
+			Id:        item.Id,
 			Available: generateRandomOccupied(item.Cap),
-			Point: item.Point,
+			Point:     item.Point,
 		})
 	}
 
 	c.JSON(http.StatusOK, resp)
+	log.Printf("mock response: %+v", resp)
 }
 
 func generateRandomOccupied(cap int) (avaible int) {

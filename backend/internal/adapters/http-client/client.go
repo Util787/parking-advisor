@@ -7,14 +7,14 @@ import (
 	"github.com/go-resty/resty/v2"
 )
 
-type HttpClient struct {
+type GisClient struct {
 	log                 *slog.Logger
 	client              *resty.Client
 	twoGisItemsURL      string
 	twoGisDistMatrixURL string
 }
 
-func NewHttpClient(log *slog.Logger, cfg config.HTTPClientConfig) *HttpClient {
+func NewGisClient(log *slog.Logger, cfg config.HTTPClientConfig) *GisClient {
 
 	client := resty.New()
 
@@ -23,10 +23,30 @@ func NewHttpClient(log *slog.Logger, cfg config.HTTPClientConfig) *HttpClient {
 
 	client = client.SetQueryParam("key", cfg.TwoGisApiKey)
 
-	return &HttpClient{
+	return &GisClient{
 		log:                 log,
 		client:              client,
 		twoGisItemsURL:      cfg.TwoGisItemsURL,
 		twoGisDistMatrixURL: cfg.TwoGisDistMatrixURL,
+	}
+}
+
+type ParkingInfoClient struct {
+	log            *slog.Logger
+	client         *resty.Client
+	ParkingInfoURL string
+}
+
+func NewParkingInfoClient(log *slog.Logger, cfg config.HTTPClientConfig) *ParkingInfoClient {
+
+	client := resty.New()
+
+	client = client.SetTimeout(cfg.Timeout)
+	client = client.SetRetryCount(cfg.Retries)
+
+	return &ParkingInfoClient{
+		log:            log,
+		client:         client,
+		ParkingInfoURL: cfg.ParkingInfoURL,
 	}
 }

@@ -2,6 +2,7 @@ package httpserver
 
 import (
 	"log/slog"
+	"net/http"
 
 	httpclient "github.com/Util787/parking-advisor/internal/adapters/http-client"
 	"github.com/Util787/parking-advisor/internal/models"
@@ -15,9 +16,10 @@ const (
 )
 
 type Handler struct {
-	log            *slog.Logger
-	parkingUsecase parkingUsecase
-	gisClient      *httpclient.HttpClient
+	log               *slog.Logger
+	parkingUsecase    parkingUsecase
+	gisClient         *httpclient.GisClient
+	parkingInfoClient *httpclient.ParkingInfoClient
 }
 
 type parkingUsecase interface {
@@ -34,20 +36,33 @@ func (h *Handler) GetParkings(c *gin.Context) {
 
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
-		newErrorResponse(c, h.log, 400, "invalid request", err)
+		newErrorResponse(c, h.log, http.StatusBadRequest, "invalid request", err)
 		return
 	}
 
 	var radius = defaultRadius
+	var sourcePoint = req.SourcePoint
+	var destPoint = req.DestPoint
 
 	// TODO: add retry logic here
 
-	parkings, err := h.gisClient.GetParkingsInPointRadius(radius, req.DestPoint)
+	parkings, err := h.gisClient.GetParkingsInPointRadius(radius, destPoint)
+	if len(parkings) == 0 {
+		newErrorResponse(c, h.log, http.StatusNotFound, "parkings not found", err)
+		return
+	}
 	if err != nil {
-		newErrorResponse(c, h.log, 500, "failed to fetch from external api", err)
+		newErrorResponse(c, h.log, http.StatusInternalServerError, "failed to fetch from external api", err)
+		return
 	}
 
 	parkings = h.parkingUsecase.FilterFreeParkings(parkings)
+
+	parkings, err = h.parkingInfoClient.GetParkingInfo(parkings, sourcePoint, destPoint)
+	if err != nil {
+		newErrorResponse(c, h.log, http.StatusInternalServerError, "failed to fetch from external api", err)
+		return
+	}
 
 	c.JSON(200, parkings)
 }
