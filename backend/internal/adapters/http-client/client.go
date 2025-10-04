@@ -30,3 +30,23 @@ func NewGisClient(log *slog.Logger, cfg config.HTTPClientConfig) *GisClient {
 		twoGisDistMatrixURL: cfg.TwoGisDistMatrixURL,
 	}
 }
+
+type ParkingInfoClient struct {
+	log            *slog.Logger
+	client         *resty.Client
+	ParkingInfoURL string
+}
+
+func NewParkingInfoClient(log *slog.Logger, cfg config.HTTPClientConfig) *ParkingInfoClient {
+
+	client := resty.New()
+
+	client = client.SetTimeout(cfg.Timeout)
+	client = client.SetRetryCount(cfg.Retries)
+
+	return &ParkingInfoClient{
+		log:            log,
+		client:         client,
+		ParkingInfoURL: cfg.ParkingInfoURL,
+	}
+}

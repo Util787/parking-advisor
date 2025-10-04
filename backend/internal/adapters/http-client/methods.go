@@ -27,15 +27,15 @@ type TwoGisItemsResp struct {
 	} `json:"result"`
 }
 
-func (hc *GisClient) GetParkingsInPointRadius(radius int, point models.Point) ([]models.Parking, error) {
+func (gc *GisClient) GetParkingsInPointRadius(radius int, point models.Point) ([]models.Parking, error) {
 	var resp TwoGisItemsResp
 
-	hc.log.Debug("sending request to 2gis items api", slog.Any("radius", radius), slog.Any("point", point))
+	gc.log.Debug("sending request to 2gis items api", slog.Any("radius", radius), slog.Any("point", point))
 
-	req := hc.client.R().SetQueryParams(map[string]string{"radius": strconv.Itoa(radius), "point": point.Lon + "," + point.Lat, "type": "parking", "fields": "items.capacity,items.point,items.is_paid", "sort": "distance"})
-	hc.log.Debug("request SetQueryParams", slog.Any("request", req))
+	req := gc.client.R().SetQueryParams(map[string]string{"radius": strconv.Itoa(radius), "point": point.Lon + "," + point.Lat, "type": "parking", "fields": "items.capacity,items.point,items.is_paid", "sort": "distance"})
+	gc.log.Debug("request SetQueryParams", slog.Any("request", req))
 
-	restyResp, err := req.Get(hc.twoGisItemsURL)
+	restyResp, err := req.Get(gc.twoGisItemsURL)
 
 	slog.Debug("got response from 2gis items api", slog.Any("response", resp), slog.Any("status_code", restyResp.StatusCode()))
 
@@ -70,8 +70,6 @@ func (hc *GisClient) GetParkingsInPointRadius(radius int, point models.Point) ([
 			IsPaid:   item.IsPaid,
 		})
 	}
-
-	slog.Debug("test", slog.Any("parkings", parkings))
 
 	return parkings, nil
 }
