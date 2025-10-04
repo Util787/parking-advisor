@@ -13,7 +13,7 @@ import (
 
 const expectedDurationMs = 2000
 
-func NewBasicMiddleware(log *slog.Logger) gin.HandlerFunc {
+func newBasicMiddleware(log *slog.Logger) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		requestId := uuid.NewString()
 		op := strings.TrimSuffix(c.HandlerName(), "-fm")
