@@ -6,6 +6,7 @@ export interface Point {
 export interface Parking {
   id: string;
   point: Point;
+  duration: number;
   capacity: number;
   free_parking_slots: number;
   is_paid: boolean;

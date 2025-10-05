@@ -10,12 +10,18 @@ export const ParkingForm: React.FC<ParkingFormProps> = ({ onSubmit, loading }) =
   const [sourcePoint, setSourcePoint] = useState<Point>({ lat: '', lon: '' });
   const [destPoint, setDestPoint] = useState<Point>({ lat: '', lon: '' });
 
+  const isFormValid = () => {
+    return sourcePoint.lat && sourcePoint.lon && destPoint.lat && destPoint.lon;
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSubmit({
-      source_point: sourcePoint,
-      destination_point: destPoint,
-    });
+    if (isFormValid()) {
+      onSubmit({
+        source_point: sourcePoint,
+        destination_point: destPoint,
+      });
+    }
   };
 
   return (
@@ -29,7 +35,7 @@ export const ParkingForm: React.FC<ParkingFormProps> = ({ onSubmit, loading }) =
               placeholder="Latitude"
               value={sourcePoint.lat}
               onChange={(e) => setSourcePoint({ ...sourcePoint, lat: e.target.value })}
-              className="w-full p-2 border border-gray-300 rounded-md"
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               required
             />
             <input
@@ -37,7 +43,7 @@ export const ParkingForm: React.FC<ParkingFormProps> = ({ onSubmit, loading }) =
               placeholder="Longitude"
               value={sourcePoint.lon}
               onChange={(e) => setSourcePoint({ ...sourcePoint, lon: e.target.value })}
-              className="w-full p-2 border border-gray-300 rounded-md"
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               required
             />
           </div>
@@ -51,7 +57,7 @@ export const ParkingForm: React.FC<ParkingFormProps> = ({ onSubmit, loading }) =
               placeholder="Latitude"
               value={destPoint.lat}
               onChange={(e) => setDestPoint({ ...destPoint, lat: e.target.value })}
-              className="w-full p-2 border border-gray-300 rounded-md"
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               required
             />
             <input
@@ -59,7 +65,7 @@ export const ParkingForm: React.FC<ParkingFormProps> = ({ onSubmit, loading }) =
               placeholder="Longitude"
               value={destPoint.lon}
               onChange={(e) => setDestPoint({ ...destPoint, lon: e.target.value })}
-              className="w-full p-2 border border-gray-300 rounded-md"
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               required
             />
           </div>
@@ -68,8 +74,8 @@ export const ParkingForm: React.FC<ParkingFormProps> = ({ onSubmit, loading }) =
       
       <button
         type="submit"
-        disabled={loading}
-        className="w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 disabled:bg-blue-300"
+        disabled={loading || !isFormValid()}
+        className="w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600 disabled:bg-blue-300 transition-colors duration-200 font-medium"
       >
         {loading ? 'Searching...' : 'Find Parkings'}
       </button>
