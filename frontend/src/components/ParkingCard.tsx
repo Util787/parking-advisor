@@ -16,44 +16,80 @@ export const ParkingCard: React.FC<ParkingCardProps> = ({ parking }) => {
     return `${hours}h ${remainingMinutes}min`;
   };
 
+  const getAvailabilityColor = (freeSlots: number, capacity: number) => {
+    const percentage = (freeSlots / capacity) * 100;
+    if (percentage === 0) return 'var(--error)';
+    if (percentage < 20) return 'var(--warning)';
+    return 'var(--success)';
+  };
+
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 mb-4 border-l-4 border-blue-500">
-      <div className="flex justify-between items-start">
-        <div>
-          <h3 className="text-lg font-semibold">Parking {parking.id.slice(0, 8)}</h3>
-          <p className="text-gray-600 text-sm">
-            Location: {parking.point.lat}, {parking.point.lon}
+    <div className="material-card shadow-2 p-4 mb-4 border-l-4" 
+         style={{ borderLeftColor: getAvailabilityColor(parking.free_parking_slots, parking.capacity) }}>
+      <div className="flex justify-between items-start mb-3">
+        <div className="flex-1">
+          <div className="flex items-center gap-2 mb-1">
+            <h3 className="text-lg font-semibold text-gray-800">Parking {parking.id.slice(0, 8)}</h3>
+            <span
+              className={`px-2 py-1 rounded-full text-xs font-medium ${
+                parking.is_paid 
+                  ? 'bg-amber-100 text-amber-800 border border-amber-200' 
+                  : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+              }`}
+            >
+              {parking.is_paid ? '💳 Paid' : '🆓 Free'}
+            </span>
+          </div>
+          <p className="text-gray-600 text-sm flex items-center gap-1">
+            <span>📍</span>
+            {parking.point.lat}, {parking.point.lon}
           </p>
         </div>
-        <div className="flex flex-col items-end space-y-2">
-          <span
-            className={`px-2 py-1 rounded-full text-xs font-medium ${
-              parking.is_paid ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'
-            }`}
-          >
-            {parking.is_paid ? 'Paid' : 'Free'}
-          </span>
-          {parking.duration > 0 && (
-            <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
-              {formatDuration(parking.duration)}
-            </span>
-          )}
-        </div>
+        
+        {parking.duration > 0 && (
+          <div className="bg-blue-50 text-blue-700 px-3 py-2 rounded-lg border border-blue-200">
+            <div className="text-xs font-medium text-blue-600">Drive time</div>
+            <div className="text-sm font-semibold">{formatDuration(parking.duration)}</div>
+          </div>
+        )}
       </div>
       
-      <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
-        <div>
-          <span className="font-medium">Capacity:</span> {parking.capacity}
+      <div className="grid grid-cols-3 gap-3 text-sm">
+        <div className="text-center p-2 bg-gray-50 rounded-lg border border-gray-200">
+          <div className="text-xs text-gray-600 font-medium">Capacity</div>
+          <div className="text-lg font-semibold text-gray-800">{parking.capacity}</div>
         </div>
-        <div>
-          <span className="font-medium">Free Slots:</span>{' '}
-          <span
-            className={
-              parking.free_parking_slots > 0 ? 'text-green-600 font-medium' : 'text-red-600'
-            }
+        <div className="text-center p-2 bg-gray-50 rounded-lg border border-gray-200">
+          <div className="text-xs text-gray-600 font-medium">Available</div>
+          <div 
+            className="text-lg font-semibold"
+            style={{ color: getAvailabilityColor(parking.free_parking_slots, parking.capacity) }}
           >
             {parking.free_parking_slots}
-          </span>
+          </div>
+        </div>
+        <div className="text-center p-2 bg-gray-50 rounded-lg border border-gray-200">
+          <div className="text-xs text-gray-600 font-medium">Occupancy</div>
+          <div className="text-lg font-semibold text-gray-800">
+            {Math.round((parking.free_parking_slots / parking.capacity) * 100)}%
+          </div>
+        </div>
+      </div>
+
+      {/* Progress bar */}
+      <div className="mt-3">
+        <div className="flex justify-between text-xs text-gray-600 mb-1">
+          <span>Availability</span>
+          <span>{parking.free_parking_slots}/{parking.capacity}</span>
+        </div>
+        <div className="w-full bg-gray-200 rounded-full h-2">
+          <div 
+            className="h-2 rounded-full transition-all duration-500 ease-out"
+            style={{ 
+              width: `${(parking.free_parking_slots / parking.capacity) * 100}%`,
+              backgroundColor: getAvailabilityColor(parking.free_parking_slots, parking.capacity)
+            }}
+          />
         </div>
       </div>
     </div>

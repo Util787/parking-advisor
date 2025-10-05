@@ -25,14 +25,17 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-100 py-8">
       <div className="container mx-auto px-4 max-w-4xl">
-        <header className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
+        <header className="text-center mb-12">
+          <div className="w-20 h-20 bg-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-3">
+            <span className="text-3xl text-white">🅿️</span>
+          </div>
+          <h1 className="text-4xl font-bold text-gray-800 mb-3">
             Parking Advisor
           </h1>
-          <p className="text-gray-600">
-            Find the best parking spots near your destination
+          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
+            Find the perfect parking spot near your destination with real-time availability and drive times
           </p>
         </header>
 
@@ -49,6 +52,11 @@ const App: React.FC = () => {
 
         <ParkingList parkings={parkings} />
       </div>
+
+      {/* Footer */}
+      <footer className="mt-16 text-center text-gray-500 text-sm">
+        <p>Powered by React • Material Design • Tailwind CSS</p>
+      </footer>
     </div>
   );
 };
