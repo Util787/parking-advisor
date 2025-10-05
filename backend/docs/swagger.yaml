@@ -35,7 +35,7 @@ definitions:
       lon:
         type: string
     type: object
-host: localhost:8000
+host: localhost:7078
 info:
   contact: {}
   description: Rest api providing the most relevant parking options near the destination

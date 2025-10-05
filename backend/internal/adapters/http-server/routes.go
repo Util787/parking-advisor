@@ -3,6 +3,7 @@ package httpserver
 import (
 	_ "github.com/Util787/parking-advisor/docs"
 	"github.com/Util787/parking-advisor/internal/config"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -15,6 +16,10 @@ func (h *Handler) InitRoutes(env string) *gin.Engine {
 	router := gin.New()
 	router.Use(gin.Recovery())
 
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowAllOrigins = true
+	router.Use(cors.New(corsConfig))
+	
 	if env != config.EnvProd {
 		router.Use(gin.Logger())
 	}
