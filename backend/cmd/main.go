@@ -11,6 +11,13 @@ import (
 	"github.com/Util787/parking-advisor/internal/usecase"
 )
 
+// @title           Parking Advisor API
+// @version         1.0
+// @description     Rest api providing the most relevant parking options near the destination point.
+
+// @host      localhost:8000
+// @BasePath  /api/v1
+
 func main() {
 	cfg := config.MustLoadConfig()
 

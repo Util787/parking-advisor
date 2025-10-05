@@ -26,13 +26,24 @@ type parkingUsecase interface {
 	FilterFreeParkings(parkings []models.Parking) []models.Parking
 }
 
-type getParkingsRequest struct {
+type GetParkingsRequest struct {
 	SourcePoint models.Point `json:"source_point" binding:"required"`
 	DestPoint   models.Point `json:"destination_point" binding:"required"`
 }
 
+// GetParkings godoc
+// @Summary      Find nearby parkings and return their info
+// @Description  Finds parkings near the provided destination point, filters only free parkings and enriches them with additional info (distance, slots, etc.).
+// @Tags         parkings
+// @Accept       json
+// @Produce      json
+// @Param        request  body  GetParkingsRequest  true  "request body"
+// @Success      200  {array}  models.Parking
+// @Failure      400  {object}  errorResponse
+// @Failure      500  {object}  errorResponse
+// @Router       /parkings [post]
 func (h *Handler) GetParkings(c *gin.Context) {
-	var req getParkingsRequest
+	var req GetParkingsRequest
 
 	err := c.ShouldBindJSON(&req)
 	if err != nil {
@@ -64,5 +75,5 @@ func (h *Handler) GetParkings(c *gin.Context) {
 		return
 	}
 
-	c.JSON(200, parkings)
+	c.JSON(http.StatusOK, parkings)
 }

@@ -1,0 +1,79 @@
+basePath: /api/v1
+definitions:
+  httpserver.GetParkingsRequest:
+    properties:
+      destination_point:
+        $ref: '#/definitions/models.Point'
+      source_point:
+        $ref: '#/definitions/models.Point'
+    required:
+    - destination_point
+    - source_point
+    type: object
+  httpserver.errorResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  models.Parking:
+    properties:
+      capacity:
+        type: integer
+      free_parking_slots:
+        type: integer
+      id:
+        type: string
+      is_paid:
+        type: boolean
+      point:
+        $ref: '#/definitions/models.Point'
+    type: object
+  models.Point:
+    properties:
+      lat:
+        type: string
+      lon:
+        type: string
+    type: object
+host: localhost:8000
+info:
+  contact: {}
+  description: Rest api providing the most relevant parking options near the destination
+    point.
+  title: Parking Advisor API
+  version: "1.0"
+paths:
+  /parkings:
+    post:
+      consumes:
+      - application/json
+      description: Finds parkings near the provided destination point, filters only
+        free parkings and enriches them with additional info (distance, slots, etc.).
+      parameters:
+      - description: request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/httpserver.GetParkingsRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Parking'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httpserver.errorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/httpserver.errorResponse'
+      summary: Find nearby parkings and return their info
+      tags:
+      - parkings
+swagger: "2.0"

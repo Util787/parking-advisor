@@ -1,0 +1,118 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Rest api providing the most relevant parking options near the destination point.",
+        "title": "Parking Advisor API",
+        "contact": {},
+        "version": "1.0"
+    },
+    "host": "localhost:8000",
+    "basePath": "/api/v1",
+    "paths": {
+        "/parkings": {
+            "post": {
+                "description": "Finds parkings near the provided destination point, filters only free parkings and enriches them with additional info (distance, slots, etc.).",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "parkings"
+                ],
+                "summary": "Find nearby parkings and return their info",
+                "parameters": [
+                    {
+                        "description": "request body",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/httpserver.GetParkingsRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/models.Parking"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/httpserver.errorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/httpserver.errorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "httpserver.GetParkingsRequest": {
+            "type": "object",
+            "required": [
+                "destination_point",
+                "source_point"
+            ],
+            "properties": {
+                "destination_point": {
+                    "$ref": "#/definitions/models.Point"
+                },
+                "source_point": {
+                    "$ref": "#/definitions/models.Point"
+                }
+            }
+        },
+        "httpserver.errorResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.Parking": {
+            "type": "object",
+            "properties": {
+                "capacity": {
+                    "type": "integer"
+                },
+                "free_parking_slots": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "string"
+                },
+                "is_paid": {
+                    "type": "boolean"
+                },
+                "point": {
+                    "$ref": "#/definitions/models.Point"
+                }
+            }
+        },
+        "models.Point": {
+            "type": "object",
+            "properties": {
+                "lat": {
+                    "type": "string"
+                },
+                "lon": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
