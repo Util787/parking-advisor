@@ -4,10 +4,13 @@ definitions:
     properties:
       destination_point:
         $ref: '#/definitions/models.Point'
+      radius:
+        type: integer
       source_point:
         $ref: '#/definitions/models.Point'
     required:
     - destination_point
+    - radius
     - source_point
     type: object
   httpserver.errorResponse:
@@ -35,7 +38,6 @@ definitions:
       lon:
         type: string
     type: object
-host: localhost:7078
 info:
   contact: {}
   description: Rest api providing the most relevant parking options near the destination
@@ -67,6 +69,10 @@ paths:
             type: array
         "400":
           description: Bad Request
+          schema:
+            $ref: '#/definitions/httpserver.errorResponse'
+        "404":
+          description: Not Found
           schema:
             $ref: '#/definitions/httpserver.errorResponse'
         "500":

@@ -10,9 +10,7 @@ import (
 )
 
 const (
-	defaultRadius   = 500
-	getItemsRetries = 3
-	radiusIncrement = 200
+	defaultRadius = 500
 )
 
 type Handler struct {
@@ -29,6 +27,7 @@ type parkingUsecase interface {
 type GetParkingsRequest struct {
 	SourcePoint models.Point `json:"source_point" binding:"required"`
 	DestPoint   models.Point `json:"destination_point" binding:"required"`
+	Radius      int          `json:"radius" binding:"required"`
 }
 
 // GetParkings godoc
@@ -39,6 +38,7 @@ type GetParkingsRequest struct {
 // @Produce      json
 // @Param        request  body  GetParkingsRequest  true  "request body"
 // @Success      200  {array}  models.Parking
+// @Failure      404  {object}  errorResponse
 // @Failure      400  {object}  errorResponse
 // @Failure      500  {object}  errorResponse
 // @Router       /parkings [post]
@@ -51,7 +51,10 @@ func (h *Handler) GetParkings(c *gin.Context) {
 		return
 	}
 
-	var radius = defaultRadius
+	var radius = req.Radius
+	if radius == 0 {
+		radius = defaultRadius
+	}
 	var sourcePoint = req.SourcePoint
 	var destPoint = req.DestPoint
 

@@ -6,7 +6,6 @@
         "contact": {},
         "version": "1.0"
     },
-    "host": "localhost:7078",
     "basePath": "/api/v1",
     "paths": {
         "/parkings": {
@@ -49,6 +48,12 @@
                             "$ref": "#/definitions/httpserver.errorResponse"
                         }
                     },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/httpserver.errorResponse"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -64,11 +69,15 @@
             "type": "object",
             "required": [
                 "destination_point",
+                "radius",
                 "source_point"
             ],
             "properties": {
                 "destination_point": {
                     "$ref": "#/definitions/models.Point"
+                },
+                "radius": {
+                    "type": "integer"
                 },
                 "source_point": {
                     "$ref": "#/definitions/models.Point"

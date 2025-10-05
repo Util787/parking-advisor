@@ -55,6 +55,12 @@ const docTemplate = `{
                             "$ref": "#/definitions/httpserver.errorResponse"
                         }
                     },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/httpserver.errorResponse"
+                        }
+                    },
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
@@ -70,11 +76,15 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "destination_point",
+                "radius",
                 "source_point"
             ],
             "properties": {
                 "destination_point": {
                     "$ref": "#/definitions/models.Point"
+                },
+                "radius": {
+                    "type": "integer"
                 },
                 "source_point": {
                     "$ref": "#/definitions/models.Point"
@@ -126,7 +136,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "localhost:7078",
+	Host:             "",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
 	Title:            "Parking Advisor API",

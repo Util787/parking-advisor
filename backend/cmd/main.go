@@ -15,7 +15,6 @@ import (
 // @version         1.0
 // @description     Rest api providing the most relevant parking options near the destination point.
 
-// @host      localhost:7078
 // @BasePath  /api/v1
 
 func main() {
