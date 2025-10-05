@@ -1,5 +1,5 @@
 # Parking Advisor
-This project is a microservice that finds relevant parking options near a destination point.
+This project is a microservice that finds relevant parking options near a destination point considering free parking slots.
 
 ## What problem does it solve
 Everyone of us has faced the frustration of driving around in circles looking for a parking spot near a destination — especially in busy urban areas. Traditional navigation tools may show nearby parking lots, but they often lack real-time availability data.
