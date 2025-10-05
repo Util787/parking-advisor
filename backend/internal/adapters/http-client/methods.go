@@ -181,6 +181,7 @@ func (gc *GisClient) GetDurationToParkings(sourcePoint models.Point, parkingPoin
 		reqBody.Targets[idx] = idx+1
 	}
 
+	gc.log.Debug("request matrix URL", slog.Any("reqURL", gc.twoGisDistMatrixURL))
 	gc.log.Debug("request to matrix", slog.Any("reqBody", reqBody))
 
 	resp, err := gc.client.R().
