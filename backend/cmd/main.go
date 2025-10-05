@@ -30,6 +30,7 @@ func main() {
 
 	restServer := httpserver.NewHTTPServer(log, cfg.Env, cfg.HTTPServerConfig, &parkingUsecase, gisClient, parkingInfoClient)
 
+	log.Info("Starting server", slog.Any("host", cfg.HTTPServerConfig.Host), slog.Any("port", cfg.HTTPServerConfig.Port))
 	restServer.Run()
 }
 

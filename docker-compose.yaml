@@ -1,0 +1,34 @@
+services:
+  parking-advisor-api:
+    build:
+      context: ./backend
+      dockerfile: dockerfile
+    restart: always
+    depends_on:
+      - mock-api
+    ports:
+      - "${HTTP_SERVER_PORT}:8080"
+    networks:
+      - parking-advisor
+
+  mock-api:
+    build:
+      context: ./mock-api
+      dockerfile: dockerfile
+    ports:
+      - "${PARKING_INFO_PORT}:7000"
+    networks:
+        - parking-advisor
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: dockerfile
+    ports:
+      - "${FRONTEND_PORT}:3000"
+    networks:
+        - parking-advisor
+
+networks:
+  parking-advisor:
+    driver: bridge
