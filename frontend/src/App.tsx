@@ -18,7 +18,7 @@ const App: React.FC = () => {
       const result = await parkingApi.getParkings(request);
       setParkings(result);
     } catch (err: any) {
-      setError(err.message || 'An error occurred while searching for parkings');
+      setError(err.message || 'Произошла ошибка при поиске парковок');
     } finally {
       setLoading(false);
     }
@@ -35,10 +35,10 @@ const App: React.FC = () => {
             </div>
           </div>
           <h1 className="text-5xl font-bold text-white mb-4">
-            Parking Advisor
+            Парковочный Советник
           </h1>
           <p className="text-blue-100 text-xl max-w-2xl mx-auto leading-relaxed">
-            Find the perfect parking spot with real-time availability and optimal routes
+            Найдите идеальное парковочное место с информацией о доступности и оптимальным маршрутом
           </p>
         </header>
 
@@ -59,7 +59,7 @@ const App: React.FC = () => {
         {/* Footer */}
         <footer className="mt-16 text-center">
           <p className="text-blue-200 text-sm">
-            Powered by React • Material Design • Tailwind CSS
+            Работает на React • Material Design • Tailwind CSS
           </p>
         </footer>
       </div>

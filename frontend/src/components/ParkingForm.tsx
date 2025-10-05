@@ -32,8 +32,8 @@ export const ParkingForm: React.FC<ParkingFormProps> = ({ onSubmit, loading }) =
           <span className="text-white text-xl">🎯</span>
         </div>
         <div>
-          <h2 className="text-2xl font-bold text-gray-800">Find Parking Spots</h2>
-          <p className="text-gray-600">Enter your current location and destination</p>
+          <h2 className="text-2xl font-bold text-gray-800">Найти парковки</h2>
+          <p className="text-gray-600">Введите ваше текущее местоположение и пункт назначения</p>
         </div>
       </div>
 
@@ -43,14 +43,14 @@ export const ParkingForm: React.FC<ParkingFormProps> = ({ onSubmit, loading }) =
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-              <h3 className="text-lg font-semibold text-gray-800">Start Location</h3>
+              <h3 className="text-lg font-semibold text-gray-800">Откуда</h3>
             </div>
             
             <div className="input-group">
-              <label className="input-label">Latitude</label>
+              <label className="input-label">Широта</label>
               <input
                 type="text"
-                placeholder="e.g., 55.7558"
+                placeholder="например, 55.7558"
                 value={sourcePoint.lat}
                 onChange={(e) => setSourcePoint({ ...sourcePoint, lat: e.target.value })}
                 className="material-input"
@@ -59,10 +59,10 @@ export const ParkingForm: React.FC<ParkingFormProps> = ({ onSubmit, loading }) =
             </div>
             
             <div className="input-group">
-              <label className="input-label">Longitude</label>
+              <label className="input-label">Долгота</label>
               <input
                 type="text"
-                placeholder="e.g., 37.6173"
+                placeholder="например, 37.6173"
                 value={sourcePoint.lon}
                 onChange={(e) => setSourcePoint({ ...sourcePoint, lon: e.target.value })}
                 className="material-input"
@@ -75,14 +75,14 @@ export const ParkingForm: React.FC<ParkingFormProps> = ({ onSubmit, loading }) =
           <div className="space-y-4">
             <div className="flex items-center gap-3">
               <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-              <h3 className="text-lg font-semibold text-gray-800">Destination</h3>
+              <h3 className="text-lg font-semibold text-gray-800">Куда</h3>
             </div>
             
             <div className="input-group">
-              <label className="input-label">Latitude</label>
+              <label className="input-label">Широта</label>
               <input
                 type="text"
-                placeholder="e.g., 55.7558"
+                placeholder="например, 55.7558"
                 value={destPoint.lat}
                 onChange={(e) => setDestPoint({ ...destPoint, lat: e.target.value })}
                 className="material-input"
@@ -91,10 +91,10 @@ export const ParkingForm: React.FC<ParkingFormProps> = ({ onSubmit, loading }) =
             </div>
             
             <div className="input-group">
-              <label className="input-label">Longitude</label>
+              <label className="input-label">Долгота</label>
               <input
                 type="text"
-                placeholder="e.g., 37.6173"
+                placeholder="например, 37.6173"
                 value={destPoint.lon}
                 onChange={(e) => setDestPoint({ ...destPoint, lon: e.target.value })}
                 className="material-input"
@@ -113,12 +113,12 @@ export const ParkingForm: React.FC<ParkingFormProps> = ({ onSubmit, loading }) =
           {loading ? (
             <>
               <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              Searching for Parking...
+              Ищем парковки...
             </>
           ) : (
             <>
               <span className="text-xl">🔍</span>
-              Find Available Parking
+              Найти доступные парковки
             </>
           )}
         </button>

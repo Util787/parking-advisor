@@ -10,11 +10,11 @@ export const ParkingCard: React.FC<ParkingCardProps> = ({ parking, isBest }) => 
   const formatDuration = (seconds: number): string => {
     const minutes = Math.ceil(seconds / 60);
     if (minutes < 60) {
-      return `${minutes} min`;
+      return `${minutes} мин`;
     }
     const hours = Math.floor(minutes / 60);
     const remainingMinutes = minutes % 60;
-    return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}m` : `${hours}h`;
+    return remainingMinutes > 0 ? `${hours}ч ${remainingMinutes}м` : `${hours}ч`;
   };
 
   const getAvailabilityColor = (freeSlots: number, capacity: number) => {
@@ -31,7 +31,7 @@ export const ParkingCard: React.FC<ParkingCardProps> = ({ parking, isBest }) => 
     <div className={`material-card p-6 relative ${isBest ? 'ring-2 ring-green-500 ring-opacity-50' : ''}`}>
       {isBest && (
         <div className="absolute -top-3 -left-2 bg-gradient-to-r from-green-500 to-emerald-600 text-white px-4 py-1 rounded-full text-sm font-semibold shadow-lg z-10">
-          ⭐ Best Match
+          ⭐ Лучший вариант
         </div>
       )}
       
@@ -48,7 +48,7 @@ export const ParkingCard: React.FC<ParkingCardProps> = ({ parking, isBest }) => 
             </div>
             <div className="flex-1">
               <h3 className="text-xl font-bold text-gray-800 mb-1">
-                Parking {parking.id.slice(0, 8)}
+                Парковка {parking.id.slice(0, 8)}
               </h3>
               <p className="text-gray-600 flex items-center gap-2">
                 <span>📍</span>
@@ -60,11 +60,11 @@ export const ParkingCard: React.FC<ParkingCardProps> = ({ parking, isBest }) => 
           {/* Stats Grid */}
           <div className="grid grid-cols-3 gap-3 mb-4">
             <div className="text-center p-3 bg-gray-50 rounded-lg">
-              <div className="text-sm text-gray-600 font-medium">Capacity</div>
+              <div className="text-sm text-gray-600 font-medium">Вместимость</div>
               <div className="text-lg font-bold text-gray-800">{parking.capacity}</div>
             </div>
             <div className="text-center p-3 bg-gray-50 rounded-lg">
-              <div className="text-sm text-gray-600 font-medium">Available</div>
+              <div className="text-sm text-gray-600 font-medium">Свободно</div>
               <div 
                 className="text-lg font-bold"
                 style={{ color: getAvailabilityColor(parking.free_parking_slots, parking.capacity) }}
@@ -73,7 +73,7 @@ export const ParkingCard: React.FC<ParkingCardProps> = ({ parking, isBest }) => 
               </div>
             </div>
             <div className="text-center p-3 bg-gray-50 rounded-lg">
-              <div className="text-sm text-gray-600 font-medium">Occupancy</div>
+              <div className="text-sm text-gray-600 font-medium">Загруженность</div>
               <div className="text-lg font-bold text-gray-800">
                 {Math.round(availabilityPercentage)}%
               </div>
@@ -83,8 +83,8 @@ export const ParkingCard: React.FC<ParkingCardProps> = ({ parking, isBest }) => 
           {/* Progress Bar */}
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
-              <span className="text-gray-600">Availability</span>
-              <span className="font-semibold">{parking.free_parking_slots}/{parking.capacity} spots</span>
+              <span className="text-gray-600">Доступность</span>
+              <span className="font-semibold">{parking.free_parking_slots}/{parking.capacity} мест</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-3">
               <div 
@@ -102,7 +102,7 @@ export const ParkingCard: React.FC<ParkingCardProps> = ({ parking, isBest }) => 
         <div className="flex flex-col items-end gap-3">
           {parking.duration > 0 && (
             <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-center min-w-[120px]">
-              <div className="text-blue-600 text-sm font-semibold mb-1">Drive Time</div>
+              <div className="text-blue-600 text-sm font-semibold mb-1">В пути</div>
               <div className="text-2xl font-bold text-blue-700">{formatDuration(parking.duration)}</div>
             </div>
           )}
@@ -112,7 +112,7 @@ export const ParkingCard: React.FC<ParkingCardProps> = ({ parking, isBest }) => 
               ? 'bg-amber-100 text-amber-800 border border-amber-200' 
               : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
           }`}>
-            {parking.is_paid ? 'Paid Parking' : 'Free Parking'}
+            {parking.is_paid ? 'Платная парковка' : 'Бесплатная парковка'}
           </div>
         </div>
       </div>
