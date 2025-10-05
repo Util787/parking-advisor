@@ -11,7 +11,8 @@ export const ParkingForm: React.FC<ParkingFormProps> = ({ onSubmit, loading }) =
   const [destPoint, setDestPoint] = useState<Point>({ lat: '', lon: '' });
 
   const isFormValid = () => {
-    return sourcePoint.lat && sourcePoint.lon && destPoint.lat && destPoint.lon;
+    return sourcePoint.lat.trim() && sourcePoint.lon.trim() && 
+           destPoint.lat.trim() && destPoint.lon.trim();
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -25,84 +26,99 @@ export const ParkingForm: React.FC<ParkingFormProps> = ({ onSubmit, loading }) =
   };
 
   return (
-    <div className="material-card shadow-3 p-6">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
-          <span className="text-white font-bold text-lg">🚗</span>
+    <div className="material-card p-8">
+      <div className="flex items-center gap-4 mb-8">
+        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+          <span className="text-white text-xl">🎯</span>
         </div>
         <div>
-          <h2 className="text-xl font-semibold text-gray-800">Find Parking Spots</h2>
-          <p className="text-gray-600 text-sm">Enter your current location and destination</p>
+          <h2 className="text-2xl font-bold text-gray-800">Find Parking Spots</h2>
+          <p className="text-gray-600">Enter your current location and destination</p>
         </div>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Source Point */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2 text-gray-700">
-              <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
-              <label className="font-medium">Start Location</label>
+            <div className="flex items-center gap-3">
+              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              <h3 className="text-lg font-semibold text-gray-800">Start Location</h3>
             </div>
-            <div className="space-y-3">
+            
+            <div className="input-group">
+              <label className="input-label">Latitude</label>
               <input
                 type="text"
-                placeholder="Latitude (e.g., 55.7558)"
+                placeholder="e.g., 55.7558"
                 value={sourcePoint.lat}
                 onChange={(e) => setSourcePoint({ ...sourcePoint, lat: e.target.value })}
-                className="material-input w-full"
+                className="material-input"
                 required
               />
+            </div>
+            
+            <div className="input-group">
+              <label className="input-label">Longitude</label>
               <input
                 type="text"
-                placeholder="Longitude (e.g., 37.6173)"
+                placeholder="e.g., 37.6173"
                 value={sourcePoint.lon}
                 onChange={(e) => setSourcePoint({ ...sourcePoint, lon: e.target.value })}
-                className="material-input w-full"
+                className="material-input"
                 required
               />
             </div>
           </div>
-          
+
+          {/* Destination Point */}
           <div className="space-y-4">
-            <div className="flex items-center gap-2 text-gray-700">
-              <span className="w-2 h-2 bg-green-500 rounded-full"></span>
-              <label className="font-medium">Destination</label>
+            <div className="flex items-center gap-3">
+              <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+              <h3 className="text-lg font-semibold text-gray-800">Destination</h3>
             </div>
-            <div className="space-y-3">
+            
+            <div className="input-group">
+              <label className="input-label">Latitude</label>
               <input
                 type="text"
-                placeholder="Latitude (e.g., 55.7558)"
+                placeholder="e.g., 55.7558"
                 value={destPoint.lat}
                 onChange={(e) => setDestPoint({ ...destPoint, lat: e.target.value })}
-                className="material-input w-full"
+                className="material-input"
                 required
               />
+            </div>
+            
+            <div className="input-group">
+              <label className="input-label">Longitude</label>
               <input
                 type="text"
-                placeholder="Longitude (e.g., 37.6173)"
+                placeholder="e.g., 37.6173"
                 value={destPoint.lon}
                 onChange={(e) => setDestPoint({ ...destPoint, lon: e.target.value })}
-                className="material-input w-full"
+                className="material-input"
                 required
               />
             </div>
           </div>
         </div>
-        
+
+        {/* Submit Button */}
         <button
           type="submit"
           disabled={loading || !isFormValid()}
-          className="material-button w-full py-3 text-base"
+          className="material-button w-full text-lg font-semibold"
         >
           {loading ? (
             <>
-              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-              Searching for Parkings...
+              <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              Searching for Parking...
             </>
           ) : (
             <>
-              <span>🔍</span>
-              Find Available Parkings
+              <span className="text-xl">🔍</span>
+              Find Available Parking
             </>
           )}
         </button>

@@ -18,45 +18,51 @@ const App: React.FC = () => {
       const result = await parkingApi.getParkings(request);
       setParkings(result);
     } catch (err: any) {
-      setError(err.response?.data?.message || 'An error occurred while searching for parkings');
+      setError(err.message || 'An error occurred while searching for parkings');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-100 py-8">
+    <div className="min-h-screen py-8">
       <div className="container mx-auto px-4 max-w-4xl">
+        {/* Header */}
         <header className="text-center mb-12">
-          <div className="w-20 h-20 bg-blue-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-3">
-            <span className="text-3xl text-white">🅿️</span>
+          <div className="w-24 h-24 bg-white rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-2xl">
+            <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+              <span className="text-3xl text-white">🅿️</span>
+            </div>
           </div>
-          <h1 className="text-4xl font-bold text-gray-800 mb-3">
+          <h1 className="text-5xl font-bold text-white mb-4">
             Parking Advisor
           </h1>
-          <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Find the perfect parking spot near your destination with real-time availability and drive times
+          <p className="text-blue-100 text-xl max-w-2xl mx-auto leading-relaxed">
+            Find the perfect parking spot with real-time availability and optimal routes
           </p>
         </header>
 
-        <div className="mb-8">
+        {/* Main Content */}
+        <div className="space-y-8">
           <ParkingForm onSubmit={handleSearch} loading={loading} />
+          
+          {error && (
+            <ErrorAlert
+              message={error}
+              onClose={() => setError(null)}
+            />
+          )}
+
+          <ParkingList parkings={parkings} loading={loading} />
         </div>
 
-        {error && (
-          <ErrorAlert
-            message={error}
-            onClose={() => setError(null)}
-          />
-        )}
-
-        <ParkingList parkings={parkings} />
+        {/* Footer */}
+        <footer className="mt-16 text-center">
+          <p className="text-blue-200 text-sm">
+            Powered by React • Material Design • Tailwind CSS
+          </p>
+        </footer>
       </div>
-
-      {/* Footer */}
-      <footer className="mt-16 text-center text-gray-500 text-sm">
-        <p>Powered by React • Material Design • Tailwind CSS</p>
-      </footer>
     </div>
   );
 };
