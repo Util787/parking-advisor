@@ -48,7 +48,7 @@ export const ParkingCard: React.FC<ParkingCardProps> = ({ parking, isBest }) => 
             </div>
             <div className="flex-1">
               <h3 className="text-xl font-bold text-gray-800 mb-1">
-                Парковка {parking.id.slice(0, 8)}
+                Парковка {parking.id}
               </h3>
               <p className="text-gray-600 flex items-center gap-2">
                 <span>📍</span>
