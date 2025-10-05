@@ -1,2 +1,4 @@
 .env
 keys.json
+/backend/vendor
+/frontend

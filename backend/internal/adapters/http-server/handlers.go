@@ -53,8 +53,6 @@ func (h *Handler) GetParkings(c *gin.Context) {
 	var sourcePoint = req.SourcePoint
 	var destPoint = req.DestPoint
 
-	// TODO: add retry logic here
-
 	parkings, err := h.gisClient.GetParkingsInPointRadius(defaultRadius, destPoint)
 	if len(parkings) == 0 {
 		newErrorResponse(c, h.log, http.StatusNotFound, "parkings not found", err)
@@ -66,6 +64,21 @@ func (h *Handler) GetParkings(c *gin.Context) {
 	}
 
 	parkings = h.parkingUsecase.FilterFreeParkings(parkings)
+
+	parkingPoints := make([]models.Point, len(parkings))
+	for idx, parking := range parkings {
+		parkingPoints[idx] = parking.Point 
+	}
+
+	durations, err := h.gisClient.GetDurationToParkings(sourcePoint, parkingPoints)
+	if err != nil {
+		newErrorResponse(c, h.log, http.StatusInternalServerError, "failed to fetch from matrix api", err)
+		return
+	}
+
+	for idx := range parkings {
+		parkings[idx].Duration = durations[idx]
+	}
 
 	parkings, err = h.parkingInfoClient.GetParkingInfo(parkings, sourcePoint, destPoint)
 	if err != nil {
