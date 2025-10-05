@@ -4,13 +4,10 @@ definitions:
     properties:
       destination_point:
         $ref: '#/definitions/models.Point'
-      radius:
-        type: integer
       source_point:
         $ref: '#/definitions/models.Point'
     required:
     - destination_point
-    - radius
     - source_point
     type: object
   httpserver.errorResponse:

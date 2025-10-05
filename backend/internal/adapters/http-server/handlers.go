@@ -27,7 +27,6 @@ type parkingUsecase interface {
 type GetParkingsRequest struct {
 	SourcePoint models.Point `json:"source_point" binding:"required"`
 	DestPoint   models.Point `json:"destination_point" binding:"required"`
-	Radius      int          `json:"radius" binding:"required"`
 }
 
 // GetParkings godoc
@@ -51,16 +50,12 @@ func (h *Handler) GetParkings(c *gin.Context) {
 		return
 	}
 
-	var radius = req.Radius
-	if radius == 0 {
-		radius = defaultRadius
-	}
 	var sourcePoint = req.SourcePoint
 	var destPoint = req.DestPoint
 
 	// TODO: add retry logic here
 
-	parkings, err := h.gisClient.GetParkingsInPointRadius(radius, destPoint)
+	parkings, err := h.gisClient.GetParkingsInPointRadius(defaultRadius, destPoint)
 	if len(parkings) == 0 {
 		newErrorResponse(c, h.log, http.StatusNotFound, "parkings not found", err)
 		return

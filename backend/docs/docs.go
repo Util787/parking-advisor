@@ -76,15 +76,11 @@ const docTemplate = `{
             "type": "object",
             "required": [
                 "destination_point",
-                "radius",
                 "source_point"
             ],
             "properties": {
                 "destination_point": {
                     "$ref": "#/definitions/models.Point"
-                },
-                "radius": {
-                    "type": "integer"
                 },
                 "source_point": {
                     "$ref": "#/definitions/models.Point"
