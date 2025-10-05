@@ -80,6 +80,7 @@ type ParkingInfoReq struct {
 	Items      []struct {
 		Id       string       `json:"id"`
 		Capacity int          `json:"capacity"`
+		Duration int          `json:"duration"`
 		Point    models.Point `json:"point"`
 	} `json:"items"`
 }
@@ -97,6 +98,7 @@ func (pc *ParkingInfoClient) GetParkingInfo(parkings []models.Parking, sourcePoi
 	reqBody.Items = make([]struct {
 		Id       string       `json:"id"`
 		Capacity int          `json:"capacity"`
+		Duration int          `json:"duration"`
 		Point    models.Point `json:"point"`
 	}, len(parkings))
 
@@ -134,4 +136,82 @@ func (pc *ParkingInfoClient) GetParkingInfo(parkings []models.Parking, sourcePoi
 	}
 
 	return parkings, nil
+}
+
+func (gc *GisClient) GetDurationToParkings(sourcePoint models.Point, parkingPoints []models.Point) ([]int, error){
+	reqBody := struct {
+		Points  []struct{
+			Lat float64 `json:"lat"`
+			Lon float64 `json:"lon"`
+		} `json:"points"`
+		Sources []int          `json:"sources"`
+		Targets []int          `json:"targets"`
+	}{}
+
+	reqBody.Points = make([]struct{
+		Lat float64 `json:"lat"`
+		Lon float64 `json:"lon"`
+	}, len(parkingPoints)+1)
+
+	sourceLat, _ := strconv.ParseFloat(sourcePoint.Lat, 64)
+	sourceLon, _ := strconv.ParseFloat(sourcePoint.Lon, 64)
+	reqBody.Points[0] = struct{
+		Lat float64 "json:\"lat\""
+		Lon float64 "json:\"lon\""
+		}{
+			Lat: sourceLat,
+			Lon: sourceLon,
+		}
+	
+	for idx, parkingPoint := range parkingPoints {
+		sourceLat, _ := strconv.ParseFloat(parkingPoint.Lat, 64)
+		sourceLon, _ := strconv.ParseFloat(parkingPoint.Lon, 64)
+		reqBody.Points[idx+1] = struct{
+			Lat float64 "json:\"lat\""
+			Lon float64 "json:\"lon\""
+			}{
+				Lat: sourceLat,
+				Lon: sourceLon,
+			}
+	}
+
+	reqBody.Sources = []int{0}
+	reqBody.Targets = make([]int, len(parkingPoints))
+	for idx := range parkingPoints {
+		reqBody.Targets[idx] = idx+1
+	}
+
+	gc.log.Debug("request matrix URL", slog.Any("reqURL", gc.twoGisDistMatrixURL))
+	gc.log.Debug("request to matrix", slog.Any("reqBody", reqBody))
+
+	resp, err := gc.client.R().
+		SetHeader("Content-Type", "application/json").
+		SetBody(reqBody).
+		Post(gc.twoGisDistMatrixURL)
+
+	if err != nil {
+		return nil, fmt.Errorf("%s :error getting matrix from 2gis: %w", common.GetOperationName(), err)
+	}
+
+	if resp.StatusCode() != 200 {
+		return nil, fmt.Errorf("%s :non-200 status code from 2gis: %d", common.GetOperationName(), resp.StatusCode())
+	}
+
+	respBody := struct{
+		Routes []struct{
+			Duration int `json:"duration"`
+		} `json:"routes"`
+	}{}
+
+	err = json.Unmarshal(resp.Body(), &respBody)
+	if err != nil {
+		return nil, fmt.Errorf("%s :error unmarshalling parking matrix response: %w", common.GetOperationName(), err)
+	}
+
+	durations := make([]int, len(parkingPoints))
+	for idx, duration := range respBody.Routes {
+		durations[idx] = duration.Duration
+	}
+
+	return durations, nil
 }
