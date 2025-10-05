@@ -5,5 +5,5 @@ RUN CGO_ENABLED=0 GOOS=linux go build -mod=vendor -o ./backend ./cmd/...
 
 FROM scratch AS final
 COPY --from=builder /app/backend /backend
-EXPOSE "7078"
+EXPOSE "8000"
 ENTRYPOINT ["/backend"]
