@@ -18,8 +18,12 @@ func (h *Handler) InitRoutes(env string) *gin.Engine {
 
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowAllOrigins = true
+	corsConfig.AllowMethods = []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"}
+	corsConfig.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
+	corsConfig.AllowCredentials = true
+
 	router.Use(cors.New(corsConfig))
-	
+
 	if env != config.EnvProd {
 		router.Use(gin.Logger())
 	}
